@@ -118,7 +118,7 @@ try {
 
 
 			// NOTE: Do not break. Fall through to 'getSession
-			if(!$request['params']['u'] || !$request['params']['p']) {
+		    if(!$request['params']['u'] || !$request['params']['p'] || !$request['params']['t']) {
 				break;
 			}
 
@@ -129,7 +129,7 @@ try {
 
 			// Try / catch here to hide login credentials
 			try {
-				$settings->auth->login($request['params']['u'], $request['params']['p']);
+			    $settings->auth->login($request['params']['u'], $request['params']['p'], $request['params']['t']);
 			} catch(Exception $e) {
 				throw new Exception($e->getMessage(), $e->getCode());
 			}

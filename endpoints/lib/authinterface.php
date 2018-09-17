@@ -6,15 +6,15 @@
  * @copyright Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
  * @version $Id: authinterface.php 595 2015-04-17 09:50:36Z imoore76 $
  * @package phpVirtualBox
- * 
+ *
  * A class wishing to implement this interface must also contain
  * a list of capabilities describing its capabilities in a public
  * object member array called capabilities.
- * 
+ *
  * boolean canChangePassword - Users can change passwords
  * boolean canModifyUsers - Users can be modified
  * boolean canLogout - Users can log out
- * 	
+ *
  * E.g.
  * var $capabilities = array(
  *		'canChangePassword' => true,
@@ -25,9 +25,9 @@
  * The implementing class may also define a public autoLoginHook
  * method that auto-populates $_SESSION. This would automatically
  * log the user in, bypassing the login() function.
- * 
+ *
  * E.g.
- * 
+ *
  * 	function autoLoginHook()
  *	{
  *		global $_SESSION;
@@ -54,8 +54,8 @@ interface phpvbAuth {
 	* @param string $username user name
 	* @param string $password password
 	*/
-	function login($username, $password);
-	
+	function login($username, $password, $token);
+
 	/**
 	*
 	* Change password function.
@@ -64,28 +64,28 @@ interface phpvbAuth {
 	* @return boolean true on success
 	*/
 	function changePassword($old, $new);
-	
+
 	/**
 	*
 	* Revalidate login info and set authCheckHeartbeat session variable.
 	* @param vboxconnector $vbox vboxconnector object instance
 	*/
 	function heartbeat($vbox);
-	
+
 	/**
 	*
 	* Log out user present in $_SESSION
 	* @param array $response response passed byref by API and populated within function
 	*/
 	function logout(&$response);
-	
+
 	/**
 	*
 	* Return a list of users
 	* @return array list of users
 	*/
 	function listUsers();
-	
+
 	/**
 	*
 	* Update user information such as password and admin status
@@ -93,15 +93,15 @@ interface phpvbAuth {
 	* @param boolean $skipExistCheck Do not check that the user exists first. Essentially, if this is set and the user does not exist, it is added.
 	*/
 	function updateUser($vboxRequest, $skipExistCheck);
-	
-	
+
+
 	/**
 	*
 	* Remove the user $user
 	* @param string $user Username to remove
 	*/
 	function deleteUser($user);
-	
-	
-	
+
+
+
 }

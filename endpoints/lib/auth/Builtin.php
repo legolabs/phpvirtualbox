@@ -1,4 +1,10 @@
 <?php
+// Include Google Authenticator classes
+require_once(__DIR__.'/../GoogleAuthenticator/FixedBitNotation.php');
+require_once(__DIR__.'/../GoogleAuthenticator/GoogleAuthenticatorInterface.php');
+require_once(__DIR__.'/../GoogleAuthenticator/GoogleAuthenticator.php');
+require_once(__DIR__.'/../GoogleAuthenticator/GoogleQrUrl.php');
+
 /**
  *
  * Built-in authentication module. Uses VirtualBox's set/getExtraData capability
@@ -34,10 +40,17 @@ class phpvbAuthBuiltin implements phpvbAuth {
 	 * Log in function. Populates $_SESSION
 	 * @param string $username user name
 	 * @param string $password password
+	 * @param string $token 2FA token
 	 */
-	function login($username, $password)
+	function login($username, $password, $token)
 	{
-		global $_SESSION;
+	    global $_SESSION;
+
+	    // Google Authenticator Object
+	    $g = new \Sonata\GoogleAuthenticator\GoogleAuthenticator();
+	    // Get Token seed for requested user
+	    // Note: if no seed is found for requested user, it won't login
+	    $token_seed = (new phpVBoxConfig())->user_token_seed[$username];
 
 		$vbox = new vboxconnector(true);
 		$vbox->skipSessionCheck = true;
@@ -52,7 +65,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 			$p = hash('sha512', 'admin');
 		}
 
-		if($p == hash('sha512', $password)) {
+        if($p == hash('sha512', $password) && $g->checkCode($token_seed, $token)) {
 			$_SESSION['valid'] = true;
 			$_SESSION['user'] = $username;
 			$_SESSION['admin'] = intval($vbox->vbox->getExtraData('phpvb/users/'.$username.'/admin'));
