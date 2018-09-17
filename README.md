@@ -1,3 +1,20 @@
+# Why this fork?
+
+This fork aims to add two factor authentication to enforce the phpvirtualbox login method. Sonata GoogleAuthenticator project is used to validate tokens, source code here: https://github.com/sonata-project/GoogleAuthenticator.
+
+In this first rudimentary version 2FA is mandatory, and Authenticator seeds must be specified manually for each user into config.php configuration file. If no seed is specified for a user, it won't login (this also includes the admin).
+
+You can specify user seeds in config.php, adding an array like this:
+
+```php
+var $user_token_seed = [
+    'admin' => '0123456789ABCDEF',
+    'user1' => '123456789ABCDEFG',
+    'user2' => '23456789ABCDEFGH',
+    ...
+];
+```
+
 # About
 
 phpVirtualBox is from 2017 maintained by Smart Guide Pty Ltd (tudor at smartguide dot com dot au)
